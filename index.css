@@ -1,0 +1,159 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #9fC6BF;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+
+}
+
+header > h1{
+    margin: 20px; 
+    display: flex;
+    justify-content: center;
+    color: white;
+    font-size: 4rem;
+    font-weight: 900;
+}
+
+.add-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    background-color: #DE4C36;
+    color: #FBFBFB;
+    font-size: 2rem;
+    font-weight: bolder;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.container {
+    width: 769px;
+    margin: auto;
+    /* switchare */
+    /* background-color: white;    */
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    width: 304px;
+    height: 404px;
+    color: hsl(169, 25%, 35%);
+    background-color: rgb(255, 255, 255);
+    /* border: 2px solid hsl(8, 72%, 70%); */
+    border-radius: 20px;
+    margin: 30px;
+    padding: 15px;
+    box-shadow: 5px 25px 50px rgba(0, 0, 0, 0.5);
+    position: relative;
+    z-index: 2;
+    transition: all 0.3 ease;
+    overflow: hidden;
+}
+
+.title-card {
+    max-height: 60px;
+    display: flex;
+    justify-content: center;
+    outline: none;
+
+}
+
+.content-card{
+    height: 260px;
+    outline: none;
+
+
+}
+
+
+.overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 1;
+}
+
+
+.card.expanded {
+    width: 100%;
+    height: 100%;
+
+}
+
+.card.expanded {
+    overflow: visible;
+}
+
+
+.card > h2 {
+    margin: 5px auto;
+}
+
+
+
+.text-el {
+    resize: none;
+    border: none;
+    outline: none;
+    overflow: hidden;    
+
+}
+
+
+
+
+
+.added-link {
+    height: 56px;
+    background-color: #FBFBFB;
+    /* border: 1px solid hsl(8, 72%, 70%); */
+    border-radius: 5px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+textarea, .added-link {
+    color: hsl(169, 25%, 35%);
+    margin: 15px;
+    padding: 17px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* #de4c36;  arancio */
+
+
+/* <div contenteditable="true" aria-multiline="true" role="textbox" class="notranslate IZ65Hb-YPqjbf fmcmS-x3Eknd h1U9Be-YPqjbf" dir="ltr" tabindex="0" spellcheck="true">Acqua<br>Taralli<br>Barrette<br>dsadsa</div> */
+
+
+
+
