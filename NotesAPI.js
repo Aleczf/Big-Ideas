@@ -1,6 +1,4 @@
 
-
-
 export default class NoteManager {
 
     cardArr = []
@@ -45,6 +43,7 @@ export default class NoteManager {
     
     }
 
+    
     
 
 
