@@ -23,6 +23,7 @@ header > h1 {
     color: white;
     font-size: 4rem;
     font-weight: 900;
+    user-select: none;
 }
 
 .add-btn {
