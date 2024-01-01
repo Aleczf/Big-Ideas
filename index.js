@@ -55,13 +55,6 @@ function createCard(_title = 'Titolo', _content = '') {
 }
 
 
-// // CHIAMATA FOCUSOUT
-// document.addEventListener('DOMContentLoaded', )
-
-
-// document.addEventListener('DOMContentLoaded', function(){
-    
-// })
 
 //  GESTIONE AGGIUNTA CARD AL DOM 
 document.getElementById('add-btn').addEventListener('click', () => {
