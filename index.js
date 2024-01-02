@@ -1,7 +1,7 @@
 
 //  FIREBASE STUFF
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"
-import { getDatabase, ref, push, onValue} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
+import { getDatabase, onValue, push, ref } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
 
 const appSettings = {
     databaseURL: "https://big-ideas-3d5f2-default-rtdb.europe-west1.firebasedatabase.app/"
@@ -11,13 +11,58 @@ const app = initializeApp(appSettings)
 const database = getDatabase(app)
 const notesInDB = ref(database, "notes")
 
-// // FETCH DEI SALVATAGGI DA FIREBASE
-// onValue(notesInDB, function(snapshot){
+
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    onValue(notesInDB, (snapshot) => {
+        container.innerHTML = ''   //RIPULISCO IL CONTANIER PRIMA DI AGGIUNGERE LE NOTE
+
+        let notes = Object.values(snapshot.val()) //FETCH DELLE NOTE DA FIREBASE 
+        
+        for (let nota of notes) {
+            createCardFromFirebase(nota.title, nota.content, nota.uuid)
+        }
+    })
+})
+
+
+
+
+function createCardFromFirebase(_title = 'Titolo', _content = '', _uuid) {
+
+    //CREO NUOVA CARD    
+    const newCard = document.createElement('div')
+    newCard.id = 'card'
+    newCard.className = 'card'
+
+    // ASSEGNO UUID SALVATO IN db
     
-//     console.log(snapshot.val())
+    newCard.setAttribute ('data-uuid', _uuid) 
+
+    //CREO TITOLO DA INSERIRE NELLA CARD
+    const title = document.createElement('h2')
+    title.id = 'title-card'
+    title.className = 'title-card'
+    title.contentEditable = true
+    title.textContent = _title
+    
+    //CREO TEXTAREA DA INSERIRE NELLA CARD
+    const content = document.createElement('div')
+    content.id = 'content-card'
+    content.className = 'content-card'
+    content.contentEditable = true
+    content.textContent = _content
+
+    newCard.appendChild(title)
+    newCard.appendChild(content)
+    container.insertAdjacentElement('afterbegin', newCard)
+}
 
 
-// })
+
+
+
 
 const container = document.getElementById('container')
 const overlay = document.getElementById("overlay")
@@ -54,7 +99,7 @@ function createCard(_title = 'Titolo', _content = '') {
     container.insertAdjacentElement('afterbegin', newCard)
 
     saveOnFocusOut(newCard)            // SALVA LA NOTA AL FOCUSOUT
-
+    
 }
 
 
@@ -135,6 +180,7 @@ function saveOnFocusOut(myCard) {
     myCard.addEventListener('focusout', () => {
         saveNote(myCard)
     })
+
 }
 
 
