@@ -11,10 +11,13 @@ const app = initializeApp(appSettings)
 const database = getDatabase(app)
 const notesInDB = ref(database, "notes")
 
-    // FETCH DEI SALVATAGGI DA FIREBASE
-    onValue(notesInDB, function(snapshot){
-        console.log(snapshot.val())
-    })
+// // FETCH DEI SALVATAGGI DA FIREBASE
+// onValue(notesInDB, function(snapshot){
+    
+//     console.log(snapshot.val())
+
+
+// })
 
 const container = document.getElementById('container')
 const overlay = document.getElementById("overlay")
