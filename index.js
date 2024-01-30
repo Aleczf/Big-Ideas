@@ -1,7 +1,7 @@
 
 //  FIREBASE STUFF
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js"
-import { getDatabase, onValue, push, ref, update, set, remove } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js"
+import { getDatabase, onValue, push, ref, set, remove } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js"
 
 const appSettings = {
     databaseURL: "https://big-ideas-3d5f2-default-rtdb.europe-west1.firebasedatabase.app/"
@@ -10,12 +10,15 @@ const appSettings = {
 const app = initializeApp(appSettings)
 const database = getDatabase(app)
 const notesInDB = ref(database, "notes")
+let notesArray = []
 
 
 onValue(notesInDB, (snapshot) => {
 
     container.innerHTML = ''   //RIPULISCO IL CONTANIER PRIMA DI AGGIUNGERE LE NOTE
     let notes = Object.values(snapshot.val()) //FETCH DEI VALUES DELLE NOTE DA FIREBASE E CONVERSIONE DELL'OGGETTO IN ARRAY
+    notesArray = Object.entries(snapshot.val())
+    console.log(notesArray)
     
 })
 
@@ -25,18 +28,17 @@ onValue(notesInDB, (snapshot) => {
 function updateUI() {
     onValue(notesInDB, (snapshot) => {
         container.innerHTML = ''   //RIPULISCO IL CONTANIER PRIMA DI AGGIUNGERE LE NOTE
-        let notes = Object.values(snapshot.val()) //FETCH DEI VALUES DELLE NOTE DA FIREBASE E CONVERSIONE DELL'OGGETTO IN ARRAY
         
-        alreadySavedCardArr = notes
-        
-        notes.forEach((nota) => {
+        let alreadySavedNotesArr = Object.values(snapshot.val()) //FETCH DEI VALUES DELLE NOTE DA FIREBASE E CONVERSIONE DELL'OGGETTO IN ARRAY
+                
+        alreadySavedNotesArr.forEach((nota) => {
             createCard(nota.title, nota.content, nota.uuid)
         })
     })    
 }
 
 document.addEventListener('DOMContentLoaded', updateUI) //faccio riferimento ad updateUI al caricamento del dom ma senza invocarla
-updateUI()
+// updateUI()
 
 
 
@@ -45,7 +47,6 @@ const container = document.getElementById('container')
 const overlay = document.getElementById("overlay")
 const card = document.getElementById("card")
 let cardArr = []
-let alreadySavedCardArr = []
 
 
 function createCard(_title = 'Titolo', _content = '', uuid) {
@@ -118,7 +119,14 @@ document.getElementById('svuota-tutto').addEventListener('click', () => {
 
 // FUNZIONE PER ESPANSIONE DELLA CARD
 
-function expandCard(card) {   
+function expandCard(card) {
+    let uuid = card.getAttribute('data-uuid')
+    if (!uuid) {
+        // Se la card non ha un UUID, generane uno e assegnalo
+        uuid = Math.floor(Math.random() * 10000000)
+        card.setAttribute('data-uuid', uuid)
+    }
+
     card.classList.add("expanded")
     overlay.style.display = "block" 
 }
@@ -162,32 +170,29 @@ function editFirebaseNote(editedNote){
 // SALVO NUOVA NOTA O MODIFICO SE PREESISTENTE
 function saveNote(selectedCard) {
 
-    let _uuid = selectedCard.getAttribute('data-uuid')
+    let _uuid = parseInt(selectedCard.getAttribute('data-uuid'))
+    console.log(typeof(_uuid))
+
     let _title = selectedCard.querySelector('.title-card').innerText
     let _content = selectedCard.querySelector('.content-card').innerText
 
-    const existingCardIndex = cardArr.findIndex(card => card.uuid === _uuid)
+    let noteToEdit = {
+        title : _title,
+        content : _content,
+        uuid : _uuid
+    }
+    console.log(noteToEdit)
 
-    if(existingCardIndex !== -1){         // MODIFICA NOTA GIA ESISTENTE
-        cardArr[existingCardIndex].title = _title
-        cardArr[existingCardIndex].content = _content
-
-        console.log(cardArr)
+    const existingCard = notesArray.find((card) => card[1].uuid === _uuid)
+    console.log(existingCard)
 
 
-        editFirebaseNote( cardArr[existingCardIndex])
+    if(existingCard) {
 
-        // onValue(notesInDB, (snapshot) => {
-        //     container.innerHTML = ''   //RIPULISCO IL CONTAINER PRIMA DI AGGIUNGERE LE NOTE
-    
-        //     let notes = Object.values(snapshot.val()) //FETCH DEI VALUES DELLE NOTE DA FIREBASE E CONVERSIONE DELL'OGGETTO IN ARRAY
-            
-        //     for (const nota of notes) {
-        //         createCard(nota.title, nota.content, nota.uuid)  //devo ricreare la card senza crearne una nuova ma ripopolandola con i valori del fetch
-        //     }
-        // })
-
-        console.log('modifica nota')
+        let noteIDToEdit = existingCard[0]
+        let exactLocationOfItemInDB = ref(database, `notes/${noteIDToEdit}`)
+        console.log(noteToEdit)
+        set(exactLocationOfItemInDB, noteToEdit)
 
 
     } else {     // CREA NUOVA NOTA
@@ -199,7 +204,7 @@ function saveNote(selectedCard) {
         cardArr.push(newNote)
         console.log('nuova nota')
 
-        push(notesInDB, newNote)      
+        push(notesInDB, newNote) 
 
     }    
     return
@@ -208,7 +213,6 @@ function saveNote(selectedCard) {
 
 
 function saveOnFocusOut(myCard, _uuid) {
-
 
     myCard.addEventListener('focusout', (event) => {
         console.log('focusout innescato')
@@ -233,16 +237,6 @@ function saveOnFocusOut(myCard, _uuid) {
     });
 }
 
-function getNotesFromDB() {
-    onValue(notesInDB, (snapshot) => {
-    
-        const notesArrFromDB = snapshot.val()
-
-        console.log(notesArrFromDB)
-    })
-    
-    
-}
 
 
 function deleteNote(){
@@ -254,64 +248,29 @@ function deleteNote(){
             event.stopImmediatePropagation() 
     
             const uuid = deleteBtn.getAttribute('data-uuid')
-            const selectedCard = event.target.closest('.card')     
-            console.log('rimosso')
-
-            
+            // const selectedCard = event.target.closest('.card')     
     
                 onValue(notesInDB, (snapshot) => {
                     
                     if (notesInDB) {
-                        const notesArrFromDB = snapshot.val() //OTTENGO ELENCO DI NOTE DA FIREBASE SOTTOFORMA DI OGGETTO
-                        console.log(notesArrFromDB)
-
-                        let noteKeys = Object.keys(notesArrFromDB) // OTTENGO CHIAVI DELLE NOTE SALVATE SU FB E TRASFORMO OGGETTO DI NOTE IN ARRAY
-                        console.log(noteKeys)
-                        // console.log(indexOf(noteKeys))
-
-                        let noteValues = Object.values(snapshot.val()) //FETCH DEI VALUES DELLE NOTE DA FIREBASE E CONVERSIONE DELL'OGGETTO IN ARRAY
-                        console.log(noteValues)
+                        let noteIDToDelete
+                        let notesArrFromDB = Object.entries(snapshot.val()) //FETCH DEI VALUES DELLE NOTE DA FIREBASE E CONVERSIONE DELL'OGGETTO IN ARRAY
                         
-                        // const cardToRemove = noteValues.find(card => card.uuid === uuid)
-                        // console.log(cardToRemove)
+                        for (let nota of notesArrFromDB){
 
-                        noteKeys.forEach(key => {
-                            
-                            console.log(key)
-                            console.log('Chiave da rimuovere: ', key);
+                            if(nota[1].uuid === uuid){
+                                console.log(nota[0])
+                                noteIDToDelete = nota[0]
+                            } 
 
-                            let exactLocationOfItemInDB = ref(database, `notes/${key}`)
-                            console.log(exactLocationOfItemInDB)
-
-                            // remove(key)     
-                                       
-
-                        })
+                            let exactLocationOfItemInDB = ref(database, `notes/${noteIDToDelete}`)
+                            remove(exactLocationOfItemInDB)                                     
+                        
+                        }                        
                     }
-
-
-                    
-
-                    // let notes = Object.values(snapshot.val()) //FETCH DEI VALUES DELLE NOTE DA FIREBASE E CONVERSIONE DELL'OGGETTO IN ARRAY
-
-
-                    // for (let i = 0; i < notes.length; i++) {
-
-                    //     let currentItem = notes[i]
-                    //     console.log(currentItem)
-
-                    //     const cardToRemove = cardArr.find(card => card.uuid === _uuid)
-
-
-                    //     let currentItemID = currentItem.uuid
-                    //     console.log(currentItemID)
-                    //     const locationInDB = ref(database, `notes/${itemToRemove}`)
-                    //     remove(locationInDB)
-                    // }
-                })
-            
+                })            
         })    
-
     })
 }
+
 
