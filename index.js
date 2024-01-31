@@ -11,14 +11,23 @@ const app = initializeApp(appSettings)
 const database = getDatabase(app)
 const notesInDB = ref(database, "notes")
 let notesArray = []
+let notes = []
+
+const container = document.getElementById('container')
+const overlay = document.getElementById("overlay")
+const card = document.getElementById("card")
+let cardArr = []
+
 
 
 onValue(notesInDB, (snapshot) => {
 
     container.innerHTML = ''   //RIPULISCO IL CONTANIER PRIMA DI AGGIUNGERE LE NOTE
-    let notes = Object.values(snapshot.val()) //FETCH DEI VALUES DELLE NOTE DA FIREBASE E CONVERSIONE DELL'OGGETTO IN ARRAY
+    notes = Object.values(snapshot.val()) //FETCH DEI VALUES DELLE NOTE DA FIREBASE E CONVERSIONE DELL'OGGETTO IN ARRAY
     notesArray = Object.entries(snapshot.val())
     console.log(notesArray)
+
+    updateUI()
     
 })
 
@@ -26,27 +35,17 @@ onValue(notesInDB, (snapshot) => {
 
 
 function updateUI() {
-    onValue(notesInDB, (snapshot) => {
-        container.innerHTML = ''   //RIPULISCO IL CONTANIER PRIMA DI AGGIUNGERE LE NOTE
-        
-        let alreadySavedNotesArr = Object.values(snapshot.val()) //FETCH DEI VALUES DELLE NOTE DA FIREBASE E CONVERSIONE DELL'OGGETTO IN ARRAY
-                
-        alreadySavedNotesArr.forEach((nota) => {
-            createCard(nota.title, nota.content, nota.uuid)
-        })
-    })    
+    container.innerHTML = ''   //RIPULISCO IL CONTANIER PRIMA DI AGGIUNGERE LE NOTE                 
+    
+    notes.forEach((nota) => {
+        createCard(nota.title, nota.content, nota.uuid)
+        // console.log(nota.uuid)
+    })
 }
 
 document.addEventListener('DOMContentLoaded', updateUI) //faccio riferimento ad updateUI al caricamento del dom ma senza invocarla
-// updateUI()
 
 
-
-
-const container = document.getElementById('container')
-const overlay = document.getElementById("overlay")
-const card = document.getElementById("card")
-let cardArr = []
 
 
 function createCard(_title = 'Titolo', _content = '', uuid) {
@@ -57,10 +56,10 @@ function createCard(_title = 'Titolo', _content = '', uuid) {
     newCard.className = 'card'
 
     // CREO NUOVO UUID E LO ASSEGNO AD OGNI CARD CREATA
-    if(!uuid) {
+    if(typeof uuid === 'undefined') {
         uuid = Math.floor(Math.random() * 10000000)
-        newCard.setAttribute ('data-uuid', uuid) 
     }
+    newCard.setAttribute ('data-uuid', uuid) 
 
     //CREO TITOLO DA INSERIRE NELLA CARD
     const title = document.createElement('h2')
@@ -87,7 +86,6 @@ function createCard(_title = 'Titolo', _content = '', uuid) {
     newCard.appendChild(content)
     newCard.appendChild(deleteBtn)
     container.insertAdjacentElement('afterbegin', newCard)
-
 
     saveOnFocusOut(newCard, uuid)
     deleteNote()
@@ -125,6 +123,7 @@ function expandCard(card) {
         // Se la card non ha un UUID, generane uno e assegnalo
         uuid = Math.floor(Math.random() * 10000000)
         card.setAttribute('data-uuid', uuid)
+        console.log(card.uuid)
     }
 
     card.classList.add("expanded")
@@ -157,42 +156,40 @@ document.addEventListener('click', function(event) {
 
 
 
-function editFirebaseNote(editedNote){
-    const noteRef = ref(database, `notes/${editedNote.uuid}`)
-
-    set(noteRef, editedNote)
-
-    console.log('Nota aggiornata su Firebase')
-}
+// function editFirebaseNote(editedNote){
+//     const noteRef = ref(database, `notes/${editedNote.uuid}`)
+//     set(noteRef, editedNote)
+//     console.log('Nota aggiornata su Firebase')
+// }
 
 
 
 // SALVO NUOVA NOTA O MODIFICO SE PREESISTENTE
 function saveNote(selectedCard) {
 
-    let _uuid = parseInt(selectedCard.getAttribute('data-uuid'))
-    console.log(typeof(_uuid))
-
+    let _uuid = parseInt(selectedCard.getAttribute('data-uuid')) //ASSOCIO L'UUID E LO TRASFORMO DA STRINGA A NUMERO
     let _title = selectedCard.querySelector('.title-card').innerText
     let _content = selectedCard.querySelector('.content-card').innerText
-
-    let noteToEdit = {
-        title : _title,
-        content : _content,
-        uuid : _uuid
-    }
-    console.log(noteToEdit)
-
+    
     const existingCard = notesArray.find((card) => card[1].uuid === _uuid)
     console.log(existingCard)
 
-
     if(existingCard) {
+        let noteToEdit = existingCard[1]
+        console.log(noteToEdit)
+        
+        let noteEdited = {
+            title : _title,
+            content : _content,
+            uuid : _uuid
+        }
+        console.log(noteEdited)
+
 
         let noteIDToEdit = existingCard[0]
+
         let exactLocationOfItemInDB = ref(database, `notes/${noteIDToEdit}`)
-        console.log(noteToEdit)
-        set(exactLocationOfItemInDB, noteToEdit)
+        set(exactLocationOfItemInDB, noteEdited)
 
 
     } else {     // CREA NUOVA NOTA
@@ -227,7 +224,7 @@ function saveOnFocusOut(myCard, _uuid) {
             // _uuid = myCard.getAttribute('data-uuid')
         
             saveNote(myCard, _uuid);
-            updateUI();
+            // updateUI();
         }
 
         const expandedCard = document.querySelector('.card.expanded');
@@ -274,3 +271,56 @@ function deleteNote(){
 }
 
 
+
+
+
+
+
+// let arr = [
+    
+//         {
+//             0: "432432",
+//             1: {
+//                 titolo: 'abc',
+//                 content: 'def',
+//                 uuid: 153167816
+//             }
+//         },
+//         {
+//             0: "5381832",
+//             1: {
+//                 titolo: 'abc',
+//                 content: 'def',
+//                 uuid: 789468
+//             }
+//         },
+//         {
+//             0: "08161",
+//             1: {
+//                 titolo: 'abc',
+//                 content: 'def',
+//                 uuid: 123456
+//             }
+//         },
+//         {
+//             0: "86414684",
+//             1: {
+//                 titolo: 'abc',
+//                 content: 'def',
+//                 uuid: 4534186
+//             }
+//         }
+// ]
+
+// const uuidProva = 123456
+
+// let prova = arr.find((item) => trovaUuid(item))
+
+// function trovaUuid(item) {
+//     console.log(item[1].uuid)
+//     return item[1].uuid === uuidProva    
+// }
+
+
+
+// console.log(prova)
