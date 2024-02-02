@@ -11,12 +11,10 @@ const app = initializeApp(appSettings)
 const database = getDatabase(app)
 const notesInDB = ref(database, "notes")
 let notesArray = []
-let notes = []
 
 const container = document.getElementById('container')
 const overlay = document.getElementById("overlay")
 const card = document.getElementById("card")
-let cardArr = []
 
 
 
@@ -27,7 +25,6 @@ onValue(notesInDB, (snapshot) => {
     const snapshotValue = snapshot.val() 
     if(snapshotValue){ //MI ASSICURO CHE IL DATABASE (SNAPSHOT) SIA POPOLATO
         
-        notes = Object.values(snapshotValue) //FETCH DEI VALUES DELLE NOTE DA FIREBASE E CONVERSIONE DELL'OGGETTO IN ARRAY
         notesArray = Object.entries(snapshotValue) //FETCH DELL'INTERO ARRAY CON CHIAVI E VALORI DELLE NOTE DA FIREBASE E CONVERSIONE DELL'OGGETTO IN ARRAY        
         console.log(notesArray)
         updateUI()
@@ -38,9 +35,8 @@ onValue(notesInDB, (snapshot) => {
 function updateUI() {
     container.innerHTML = ''   //RIPULISCO IL CONTANIER PRIMA DI AGGIUNGERE LE NOTE                 
     
-    notes.forEach((nota) => {
-        createCard(nota.title, nota.content, nota.uuid)
-        // console.log(nota.uuid)
+    notesArray.forEach((nota) => {
+        createCard(nota[1].title, nota[1].content, nota[1].uuid)
     })
 }
 
@@ -89,8 +85,7 @@ function createCard(_title = 'Titolo', _content = '', uuid) {
     container.insertAdjacentElement('afterbegin', newCard)
 
     saveOnFocusOut(newCard, uuid)
-    deleteNote()
-    
+    deleteNote()   
 }
 
    
@@ -116,15 +111,6 @@ document.getElementById('svuota-tutto').addEventListener('click', () => {
 
 // FUNZIONE PER ESPANSIONE DELLA CARD
 function expandCard(card) {
-    let uuid = card.getAttribute('data-uuid')
-
-    // if (!uuid) {
-    //     // Se la card non ha un UUID, generane uno e assegnalo
-    //     uuid = Math.floor(Math.random() * 10000000)
-    //     card.setAttribute('data-uuid', uuid)
-    //     console.log(card.uuid)
-    // }
-
     card.classList.add("expanded")
     overlay.style.display = "block" 
 }
@@ -161,6 +147,7 @@ function saveNote(selectedCard) {
     let _uuid = parseInt(selectedCard.getAttribute('data-uuid')) //ASSOCIO L'UUID E LO TRASFORMO DA STRINGA A NUMERO
     let _title = selectedCard.querySelector('.title-card').innerText
     let _content = selectedCard.querySelector('.content-card').innerText
+    let _date = new Date().toISOString()
     
     const existingCard = notesArray.find((card) => card[1].uuid === _uuid) //VERIFICO SE LA NOTA è GIA ESISTENTE
 
@@ -169,8 +156,11 @@ function saveNote(selectedCard) {
         let noteEdited = {
             title : _title,
             content : _content,
-            uuid : _uuid
+            uuid : _uuid,
+            updated: _date
         }
+        console.log(`The note ${noteEdited.title} has ben edited at ${noteEdited.updated}`)
+
 
         let noteIDToEdit = existingCard[0]
         let exactLocationOfItemInDB = ref(database, `notes/${noteIDToEdit}`)
@@ -181,10 +171,13 @@ function saveNote(selectedCard) {
         const newNote = {
             title : _title,
             content : _content,
-            uuid : _uuid
+            uuid : _uuid,
+            updated: _date
         }
         push(notesInDB, newNote) 
-    }    
+        console.log(`A new note has ben added at ${newNote.updated}`)
+
+    }
 }
 
 
@@ -210,7 +203,7 @@ function saveOnFocusOut(myCard, _uuid) {
 
 
 function deleteNote(){
-    
+
     const deleteBtns = document.querySelectorAll('.delete-btn')
     deleteBtns.forEach(deleteBtn => {
         deleteBtn.addEventListener('click', (event) => {
