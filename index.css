@@ -44,7 +44,8 @@ header > h1 {
     transition: 0.7s;
     cursor: pointer;
 }
-.svuota-tutto {
+
+.svuota-tutto, .most-recent, .least-recent  {
     width: 50px;
     height: 50px;
     border-radius: 100%;
@@ -57,22 +58,20 @@ header > h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    user-select: none;
-    
+    user-select: none;    
 }
 
-.svuota-tutto:hover {
+.svuota-tutto:hover, .most-recent:hover, .least-recent:hover  {
     background-color: #DE4C36;
     transition: 0.7s;
     cursor: pointer;
 }
 
+
+
 .container {
     width: 769px;
     margin: auto;
-    /* switchare */
-    /* background-color: white;    */
-
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -115,18 +114,20 @@ header > h1 {
     width: 25px;
     height: 25px;
     margin: 10px;
-    background-color: tomato;
-    font-weight: 800;
+    background-color: #3a9b9e;
+    font-weight: 500;
+    font-size: small;
     position: absolute;
     margin-left: 85%;
     border-radius: 8px;
     text-align: center;
+    line-height: 1.6;
     padding-top: 2px;
     color: white;
 }
 
 .delete-btn:hover {
-    background-color: #3a9b9e;
+    background-color: tomato;
 }
 
 
