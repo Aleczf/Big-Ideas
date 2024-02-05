@@ -11,8 +11,6 @@ const app = initializeApp(appSettings)
 const database = getDatabase(app)
 const notesInDB = ref(database, "notes")
 let notesArray = []
-// let mostRecent = []
-// let leastRecent = []
 
 const container = document.getElementById('container')
 const overlay = document.getElementById("overlay")
@@ -45,8 +43,6 @@ function updateUI() {
 
 
 document.addEventListener('DOMContentLoaded', updateUI)
-
-
 
 
 
@@ -87,41 +83,32 @@ function createCard(_title = 'Titolo', _content = '', uuid) {
     deleteBtn.className = 'delete-btn'
     deleteBtn.textContent = "X"
     deleteBtn.setAttribute('data-uuid', uuid)
-    
-   
+       
     newCard.appendChild(title)
     newCard.appendChild(content)
     newCard.appendChild(deleteBtn)
     container.insertAdjacentElement('afterbegin', newCard)
-
-    
-
+  
     saveOnFocusOut(newCard, uuid)
-    deleteNote()   
+    deleteNote()  
+    // expandCard(newCard)
+    return newCard
 }
 
-   
 
 
 
-//  GESTIONE AGGIUNTA CARD AL DOM 
-document.getElementById('add-btn').addEventListener('click', () => { //TROVARE UN MODO PER FAR ESPANDERE SUBITO LA CARD APPENA CREATA, FORSE PASSANDO UN QUALCHE PARAMETRO
+//  GESTIONE AGGIUNTA CARD AL DOM, CREATA AL CLICK DI ADD-BTN
+document.getElementById('add-btn').addEventListener('click', () => createFirstNote())
 
-    createCard()
-    expandCard(document.querySelector('.card'))
-    
-   
-    // // CREA NUOVA NOTA
-    // const newNote = {
-    //     title : 'Titolo',
-    //     content : '',        
-    //     updated: Date.now()
-    // }
-    // push(notesInDB, newNote) 
-    // console.log(`A new note has ben added at ${newNote.updated}`)
 
-})
+function createFirstNote(){
 
+    let freshNote = createCard()
+    requestAnimationFrame(() => {
+        expandCard(freshNote)
+    })
+}
 
 
 
