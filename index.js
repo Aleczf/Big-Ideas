@@ -11,8 +11,8 @@ const app = initializeApp(appSettings)
 const database = getDatabase(app)
 const notesInDB = ref(database, "notes")
 let notesArray = []
-let mostRecent = []
-let leastRecent = []
+// let mostRecent = []
+// let leastRecent = []
 
 const container = document.getElementById('container')
 const overlay = document.getElementById("overlay")
@@ -29,20 +29,26 @@ onValue(notesInDB, (snapshot) => {
         
         notesArray = Object.entries(snapshotValue) //FETCH DELL'INTERO ARRAY CON CHIAVI E VALORI DELLE NOTE DA FIREBASE E CONVERSIONE DELL'OGGETTO IN ARRAY        
         console.log(notesArray)
-        updateUI(notesArray)
+        updateUI()
     }    
 })
 
 
-function updateUI(arr) {
-    container.innerHTML = ''   //RIPULISCO IL CONTANIER PRIMA DI AGGIUNGERE LE NOTE                 
+function updateUI() {
+    container.innerHTML = ''   //RIPULISCO IL CONTAINER PRIMA DI AGGIUNGERE LE NOTE
     
-    arr.forEach((nota) => {
+    notesArray.forEach((nota) => {
         createCard(nota[1].title, nota[1].content, nota[1].uuid)
     })
 }
 
-document.addEventListener('DOMContentLoaded', updateUI(notesArray))
+
+
+document.addEventListener('DOMContentLoaded', updateUI())
+
+
+
+
 
 
 function createCard(_title = 'Titolo', _content = '', uuid) {
@@ -93,7 +99,24 @@ function createCard(_title = 'Titolo', _content = '', uuid) {
 
 
 //  GESTIONE AGGIUNTA CARD AL DOM 
-document.getElementById('add-btn').addEventListener('click', () => createCard())
+document.getElementById('add-btn').addEventListener('click', () => {
+
+    createCard()
+    
+   
+    // // CREA NUOVA NOTA
+    // const newNote = {
+    //     title : 'Titolo',
+    //     content : '',        
+    //     updated: Date.now()
+    // }
+    // push(notesInDB, newNote) 
+    // console.log(`A new note has ben added at ${newNote.updated}`)
+
+})
+
+
+
 
 
 //  GESTIONE svuota tutto 
@@ -106,41 +129,32 @@ document.getElementById('svuota-tutto').addEventListener('click', () => {
     })
 })
 
-// GESTIONE ORDINE crescente
+
+
+// GESTIONE ORDINE CRESCENTE
 document.getElementById('most-recent').addEventListener('click', () => {
-    onMostRecent()
-    updateUI(mostRecent)
-})
 
-
-
-function onMostRecent() {
-    mostRecent = [...notesArray]
-    console.log(mostRecent)
-    mostRecent.sort(function (a, b) {
+    notesArray.sort(function (a, b) {
         return new Date(a[1].updated) - new Date(b[1].updated)
     })
-}
 
+    updateUI()
+
+})
 
 
 // GESTIONE ORDINE DECRESCENTE
 document.getElementById('least-recent').addEventListener('click', () => {
-    onLeastRecent()
-    updateUI(leastRecent)
+
+    notesArray.sort(function (a, b) {
+        return new Date(b[1].updated) - new Date(a[1].updated)
+    })
+
+    updateUI()
 })
 
 
 
-function onLeastRecent() {
-    leastRecent = [...notesArray]
-    console.log(leastRecent)
-
-
-    leastRecent.sort(function (a, b) {
-        return new Date(b[1].updated) - new Date(a[1].updated)
-    })
-}
 
 
 
