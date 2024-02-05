@@ -44,7 +44,7 @@ function updateUI() {
 
 
 
-document.addEventListener('DOMContentLoaded', updateUI())
+document.addEventListener('DOMContentLoaded', updateUI)
 
 
 
@@ -53,10 +53,13 @@ document.addEventListener('DOMContentLoaded', updateUI())
 
 function createCard(_title = 'Titolo', _content = '', uuid) {
 
+  
     //CREO NUOVA CARD    
     const newCard = document.createElement('div')
     newCard.id = 'card'
     newCard.className = 'card'
+
+    
 
     // CREO NUOVO UUID E LO ASSEGNO AD OGNI CARD CREATA
     if(typeof uuid === 'undefined') {
@@ -84,11 +87,14 @@ function createCard(_title = 'Titolo', _content = '', uuid) {
     deleteBtn.className = 'delete-btn'
     deleteBtn.textContent = "X"
     deleteBtn.setAttribute('data-uuid', uuid)
-
+    
+   
     newCard.appendChild(title)
     newCard.appendChild(content)
     newCard.appendChild(deleteBtn)
     container.insertAdjacentElement('afterbegin', newCard)
+
+    
 
     saveOnFocusOut(newCard, uuid)
     deleteNote()   
@@ -99,9 +105,10 @@ function createCard(_title = 'Titolo', _content = '', uuid) {
 
 
 //  GESTIONE AGGIUNTA CARD AL DOM 
-document.getElementById('add-btn').addEventListener('click', () => {
+document.getElementById('add-btn').addEventListener('click', () => { //TROVARE UN MODO PER FAR ESPANDERE SUBITO LA CARD APPENA CREATA, FORSE PASSANDO UN QUALCHE PARAMETRO
 
     createCard()
+    expandCard(document.querySelector('.card'))
     
    
     // // CREA NUOVA NOTA
