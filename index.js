@@ -91,21 +91,11 @@ function createCard(_title = 'Titolo', _content = '', uuid) {
     // Cancellazione placeholder al focus del campo title
     title.addEventListener('focus', () => { 
         if(title.textContent === 'Titolo'){
-            title.textContent = '';
+            title.textContent = ''
         }
     })
-
-    // // Aggiunta di un event listener per cancellare il testo predefinito alla prima digitazione
-    // let firstTyping = true;
-    // title.addEventListener('input', () => {
-    //     if (firstTyping) {
-    //         title.textContent = '';
-    //         firstTyping = false;
-    //     }
-    // });
+  
      
-
-
     //CREO TEXTAREA DA INSERIRE NELLA CARD
     const content = document.createElement('div')
     content.id = 'content-card'
