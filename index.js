@@ -16,8 +16,8 @@ const container = document.getElementById('container')
 const overlay = document.getElementById("overlay")
 const card = document.getElementById("card")
 
-const ASCENDING_ORDER = -1
-const DESCENDING_ORDER = 1
+const ASCENDING_ORDER = '-1'
+const DESCENDING_ORDER = '1'
 let currentCardOrder
 
 
@@ -37,33 +37,28 @@ onValue(notesInDB, (snapshot) => {
 
 
 
-
-
-
-
 function updateUI() {
+
+    currentCardOrder = localStorage.getItem('currentCardOrder')   //CONTROLLO L'ORDINE IN CUI DEVO RENDERIZZARE LE CARD
+
+    if(currentCardOrder === ASCENDING_ORDER){
+        notesArray.sort(function (a, b) {
+            return new Date(a[1].updated) - new Date(b[1].updated)
+        })
+    } else if (currentCardOrder === DESCENDING_ORDER){
+        notesArray.sort(function (a, b) {
+            return new Date(b[1].updated) - new Date(a[1].updated)
+        })
+    }
+
+    
     container.innerHTML = ''   //RIPULISCO IL CONTAINER PRIMA DI AGGIUNGERE LE NOTE
-
-    //CONTROLLO L'ORDINE IN CUI DEVO RENDERIZZARE LE CARD
-
-    // currentCardOrder = localStorage.getItem('currentCardOrder')
-    // console.log(currentCardOrder)
-
-    // if(currentCardOrder === ASCENDING_ORDER){
-    //     notesArray.sort(function (a, b) {
-    //         return new Date(a[1].updated) - new Date(b[1].updated)
-    //     })
-    // } else if (currentCardOrder === DESCENDING_ORDER){
-    //     notesArray.sort(function (a, b) {
-    //         return new Date(b[1].updated) - new Date(a[1].updated)
-    //     })
-    // }
-
     
     notesArray.forEach((nota) => {
         createCard(nota[1].title, nota[1].content, nota[1].uuid)
     })
 }
+
 
 
 
@@ -73,14 +68,11 @@ document.addEventListener('DOMContentLoaded', updateUI)
 
 
 function createCard(_title = 'Titolo', _content = '', uuid) {
-
   
     //CREO NUOVA CARD    
     const newCard = document.createElement('div')
     newCard.id = 'card'
-    newCard.className = 'card'
-
-    
+    newCard.className = 'card'    
 
     // CREO NUOVO UUID E LO ASSEGNO AD OGNI CARD CREATA
     if(typeof uuid === 'undefined') {
@@ -96,6 +88,24 @@ function createCard(_title = 'Titolo', _content = '', uuid) {
     title.contentEditable = true
     title.textContent = _title
     
+    // Cancellazione placeholder al focus del campo title
+    title.addEventListener('focus', () => { 
+        if(title.textContent === 'Titolo'){
+            title.textContent = '';
+        }
+    })
+
+    // // Aggiunta di un event listener per cancellare il testo predefinito alla prima digitazione
+    // let firstTyping = true;
+    // title.addEventListener('input', () => {
+    //     if (firstTyping) {
+    //         title.textContent = '';
+    //         firstTyping = false;
+    //     }
+    // });
+     
+
+
     //CREO TEXTAREA DA INSERIRE NELLA CARD
     const content = document.createElement('div')
     content.id = 'content-card'
@@ -114,10 +124,10 @@ function createCard(_title = 'Titolo', _content = '', uuid) {
     newCard.appendChild(content)
     newCard.appendChild(deleteBtn)
     container.insertAdjacentElement('afterbegin', newCard)
-  
+   
     saveOnFocusOut(newCard, uuid)
     deleteNote()
-              
+                 
     return newCard
 }
 
@@ -127,13 +137,11 @@ function createCard(_title = 'Titolo', _content = '', uuid) {
 //  GESTIONE AGGIUNTA CARD AL DOM, CREATA AL CLICK DI ADD-BTN
 document.getElementById('add-btn').addEventListener('click', () => createFirstNote())
 
-
 function createFirstNote(){
-
     let freshNote = createCard()
     requestAnimationFrame(() => {
         expandCard(freshNote)
-        freshNote.querySelector('.title-card').focus()
+        freshNote.querySelector('.content-card').focus()
     })
 }
 
@@ -155,31 +163,16 @@ document.getElementById('svuota-tutto').addEventListener('click', () => {
 // GESTIONE ORDINE CRESCENTE
 document.getElementById('most-recent').addEventListener('click', () => {
 
-
-    // localStorage.setItem('currentCardOrder', ASCENDING_ORDER)
-
-    notesArray.sort(function (a, b) {
-        return new Date(a[1].updated) - new Date(b[1].updated)
-    })
-
-    updateUI()
-
+    localStorage.setItem('currentCardOrder', ASCENDING_ORDER)
+    location.reload()
 })
-
 
 // GESTIONE ORDINE DECRESCENTE
 document.getElementById('least-recent').addEventListener('click', () => {
 
-    // localStorage.setItem('currentCardOrder', DESCENDING_ORDER)
-
-    notesArray.sort(function (a, b) {
-        return new Date(b[1].updated) - new Date(a[1].updated)
-    })
-
-    updateUI()
+    localStorage.setItem('currentCardOrder', DESCENDING_ORDER)
+    location.reload()
 })
-
-
 
 
 
@@ -217,10 +210,6 @@ document.addEventListener('click', function(event) {
 
 
 
-
-
-
-
 // SALVO NUOVA NOTA O MODIFICO SE PREESISTENTE
 function saveNote(selectedCard) {
 
@@ -241,7 +230,6 @@ function saveNote(selectedCard) {
         }
         console.log(`The note ${noteEdited.title} has ben edited at ${noteEdited.updated}`)
 
-
         let noteIDToEdit = existingCard[0]
         let exactLocationOfItemInDB = ref(database, `notes/${noteIDToEdit}`)
         
@@ -256,17 +244,8 @@ function saveNote(selectedCard) {
         }
         push(notesInDB, newNote) 
         console.log(`A new note has ben added at ${newNote.updated}`)
-
     }
 }
-
-
-
-
-
-
-
-
 
 
 
@@ -287,13 +266,8 @@ function saveOnFocusOut(myCard, _uuid) {
         if (!expandedCard) {
             overlay.style.display = "none"
         }
-
-        
     })
 }
-
-
-
 
 
 
