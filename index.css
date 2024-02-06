@@ -144,6 +144,7 @@ header > h1 {
 .card.expanded {
     width: 80%;
     height: 50%;
+    max-width: 600px;
     overflow: visible;
     z-index: 1000;
     position: fixed;

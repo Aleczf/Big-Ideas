@@ -16,6 +16,10 @@ const container = document.getElementById('container')
 const overlay = document.getElementById("overlay")
 const card = document.getElementById("card")
 
+const ASCENDING_ORDER = -1
+const DESCENDING_ORDER = 1
+let currentCardOrder
+
 
 
 onValue(notesInDB, (snapshot) => {
@@ -32,8 +36,29 @@ onValue(notesInDB, (snapshot) => {
 })
 
 
+
+
+
+
+
 function updateUI() {
     container.innerHTML = ''   //RIPULISCO IL CONTAINER PRIMA DI AGGIUNGERE LE NOTE
+
+    //CONTROLLO L'ORDINE IN CUI DEVO RENDERIZZARE LE CARD
+
+    // currentCardOrder = localStorage.getItem('currentCardOrder')
+    // console.log(currentCardOrder)
+
+    // if(currentCardOrder === ASCENDING_ORDER){
+    //     notesArray.sort(function (a, b) {
+    //         return new Date(a[1].updated) - new Date(b[1].updated)
+    //     })
+    // } else if (currentCardOrder === DESCENDING_ORDER){
+    //     notesArray.sort(function (a, b) {
+    //         return new Date(b[1].updated) - new Date(a[1].updated)
+    //     })
+    // }
+
     
     notesArray.forEach((nota) => {
         createCard(nota[1].title, nota[1].content, nota[1].uuid)
@@ -63,6 +88,7 @@ function createCard(_title = 'Titolo', _content = '', uuid) {
     }
     newCard.setAttribute ('data-uuid', uuid) 
 
+    
     //CREO TITOLO DA INSERIRE NELLA CARD
     const title = document.createElement('h2')
     title.id = 'title-card'
@@ -90,8 +116,8 @@ function createCard(_title = 'Titolo', _content = '', uuid) {
     container.insertAdjacentElement('afterbegin', newCard)
   
     saveOnFocusOut(newCard, uuid)
-    deleteNote()  
-    // expandCard(newCard)
+    deleteNote()
+              
     return newCard
 }
 
@@ -107,6 +133,7 @@ function createFirstNote(){
     let freshNote = createCard()
     requestAnimationFrame(() => {
         expandCard(freshNote)
+        freshNote.querySelector('.title-card').focus()
     })
 }
 
@@ -128,6 +155,9 @@ document.getElementById('svuota-tutto').addEventListener('click', () => {
 // GESTIONE ORDINE CRESCENTE
 document.getElementById('most-recent').addEventListener('click', () => {
 
+
+    // localStorage.setItem('currentCardOrder', ASCENDING_ORDER)
+
     notesArray.sort(function (a, b) {
         return new Date(a[1].updated) - new Date(b[1].updated)
     })
@@ -140,14 +170,14 @@ document.getElementById('most-recent').addEventListener('click', () => {
 // GESTIONE ORDINE DECRESCENTE
 document.getElementById('least-recent').addEventListener('click', () => {
 
+    // localStorage.setItem('currentCardOrder', DESCENDING_ORDER)
+
     notesArray.sort(function (a, b) {
         return new Date(b[1].updated) - new Date(a[1].updated)
     })
 
     updateUI()
 })
-
-
 
 
 
@@ -183,6 +213,11 @@ document.addEventListener('click', function(event) {
         overlay.style.display = "none"
     }
 })
+
+
+
+
+
 
 
 
@@ -227,23 +262,38 @@ function saveNote(selectedCard) {
 
 
 
+
+
+
+
+
+
+
+
 function saveOnFocusOut(myCard, _uuid) {
 
     myCard.addEventListener('focusout', (event) => {
 
-        const isDeleteButton = event.relatedTarget && event.relatedTarget.id === 'delete-btn';
-        const isOverlay = event.relatedTarget && event.relatedTarget.id === 'overlay';
+        const isDeleteButton = event.relatedTarget && event.relatedTarget.id === 'delete-btn'
+        const isOverlay = event.relatedTarget && event.relatedTarget.id === 'overlay'
+        const isContent = event.relatedTarget && event.relatedTarget.id === 'title-card'
+        const isTitle = event.relatedTarget && event.relatedTarget.id === 'content-card'
 
-        if (!isDeleteButton && !isOverlay) {  // Se il focusout non è stato causato dal click sul pulsante di eliminazione o sull'overlay, salva la nota
-            saveNote(myCard, _uuid);
+        if (!isDeleteButton && !isOverlay && !isContent && !isTitle) {  // Se il focusout non è stato causato dal click sul pulsante di eliminazione o sull'overlay, salva la nota
+            saveNote(myCard, _uuid)
         }
 
-        const expandedCard = document.querySelector('.card.expanded');
+        const expandedCard = document.querySelector('.card.expanded')
         if (!expandedCard) {
-            overlay.style.display = "none";
+            overlay.style.display = "none"
         }
-    });
+
+        
+    })
 }
+
+
+
 
 
 
