@@ -1,7 +1,7 @@
 
 //  FIREBASE STUFF
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js"
-import { getDatabase, onValue, push, ref, set, remove } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js"
+import { getDatabase, onValue, push, ref, remove, set } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js"
 
 const appSettings = {
     databaseURL: "https://big-ideas-3d5f2-default-rtdb.europe-west1.firebasedatabase.app/"
@@ -13,12 +13,15 @@ const notesInDB = ref(database, "notes")
 let notesArray = []
 
 const container = document.getElementById('container')
+const header = document.getElementById('header')
 const overlay = document.getElementById("overlay")
 const card = document.getElementById("card")
 
 const ASCENDING_ORDER = '-1'
 const DESCENDING_ORDER = '1'
 let currentCardOrder
+let isNoteEdited = false
+
 
 
 
@@ -79,6 +82,10 @@ function createCard(_title = 'Titolo', _content = '', uuid) {
         uuid = Math.floor(Math.random() * 10000000)
     }
     newCard.setAttribute ('data-uuid', uuid) 
+
+    // MEMORIZZO IL TITOLO E IL CONTENUTO ORIGINALI NEL DATASET DELLA CARD, AGGIORNANDOSI COL NUOVO AD OGNI SALVATAGGIO
+    newCard.dataset.previousTitle = _title
+    newCard.dataset.previousContent = _content
 
     
     //CREO TITOLO DA INSERIRE NELLA CARD
@@ -154,14 +161,14 @@ document.getElementById('svuota-tutto').addEventListener('click', () => {
 document.getElementById('most-recent').addEventListener('click', () => {
 
     localStorage.setItem('currentCardOrder', ASCENDING_ORDER)
-    location.reload()
+    updateUI()
 })
 
 // GESTIONE ORDINE DECRESCENTE
 document.getElementById('least-recent').addEventListener('click', () => {
 
     localStorage.setItem('currentCardOrder', DESCENDING_ORDER)
-    location.reload()
+    updateUI()
 })
 
 
@@ -171,6 +178,11 @@ document.getElementById('least-recent').addEventListener('click', () => {
 function expandCard(card) {
     card.classList.add("expanded")
     overlay.style.display = "block" 
+}
+
+function collapseCard(myCard) {  //da unire ad expandCard()
+    myCard.classList.remove("expanded")
+    overlay.style.display = "none"
 }
 
 container.addEventListener('click', (event) => {
@@ -183,19 +195,22 @@ container.addEventListener('click', (event) => {
 })
 
 
+
+
 //HANDLER CLICK EXPANDED CARD
-document.addEventListener('click', function(event) {
+container.addEventListener('click', function(event) {
     const selectedCard = event.target.closest('.card')
     const expandedCard = document.querySelector('.card.expanded')
 
-    if(selectedCard){       // ESPANDE LA CARD
+    if(selectedCard){       // ESPANDE LA CARD        
         expandCard(selectedCard)
 
-    } else if(expandedCard && !event.target.closest('.card')) { //CONTRAE LA CARD
-        expandedCard.classList.remove("expanded")
-        overlay.style.display = "none"
+    } else if(expandedCard && !selectedCard) { //CONTRAE LA CARD
+        collapseCard(selectedCard)
     }
 })
+
+
 
 
 
@@ -210,33 +225,35 @@ function saveNote(selectedCard) {
     
     const existingCard = notesArray.find((card) => card[1].uuid === _uuid) //VERIFICO SE LA NOTA è GIA ESISTENTE
 
-    if(existingCard) {
-        
-        let noteEdited = {
-            title : _title,
-            content : _content,
-            uuid : _uuid,
-            updated: _date
-        }
-        console.log(`The note ${noteEdited.title} has ben edited at ${noteEdited.updated}`)
+    if(isNoteEdited) {
 
-        let noteIDToEdit = existingCard[0]
-        let exactLocationOfItemInDB = ref(database, `notes/${noteIDToEdit}`)
-        
-        set(exactLocationOfItemInDB, noteEdited)
+        if(existingCard) {
+            
+            let noteEdited = {
+                title : _title,
+                content : _content,
+                uuid : _uuid,
+                updated: _date
+            }
+            console.log(`The note ${noteEdited.title} has ben edited at ${noteEdited.updated}`)
 
-    } else {     // CREA NUOVA NOTA
-        const newNote = {
-            title : _title,
-            content : _content,
-            uuid : _uuid,
-            updated: _date
+            let noteIDToEdit = existingCard[0]
+            let exactLocationOfItemInDB = ref(database, `notes/${noteIDToEdit}`)
+            
+            set(exactLocationOfItemInDB, noteEdited)
+
+        } else {     // CREA NUOVA NOTA
+            const newNote = {
+                title : _title,
+                content : _content,
+                uuid : _uuid,
+                updated: _date
+            }
+            push(notesInDB, newNote) 
+            console.log(`A new note has ben added at ${newNote.updated}`)
         }
-        push(notesInDB, newNote) 
-        console.log(`A new note has ben added at ${newNote.updated}`)
     }
 }
-
 
 
 function saveOnFocusOut(myCard, _uuid) {
@@ -249,7 +266,20 @@ function saveOnFocusOut(myCard, _uuid) {
         const isTitle = event.relatedTarget && event.relatedTarget.id === 'content-card'
 
         if (!isDeleteButton && !isOverlay && !isContent && !isTitle) {  // Se il focusout non è stato causato dal click sul pulsante di eliminazione o sull'overlay, salva la nota
-            saveNote(myCard, _uuid)
+            
+            const title = myCard.querySelector('.title-card').innerText
+            const content = myCard.querySelector('.content-card').innerText
+            const previousTitle = myCard.dataset.previousTitle
+            const previousContent = myCard.dataset.previousContent
+
+            if (title !== previousTitle || content !== previousContent) {
+                isNoteEdited = true
+                saveNote(myCard, _uuid)
+                isNoteEdited = false
+
+            }
+
+            collapseCard(myCard)                
         }
 
         const expandedCard = document.querySelector('.card.expanded')
