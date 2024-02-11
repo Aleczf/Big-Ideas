@@ -72,26 +72,38 @@ header > h1 {
 
 
 .container {
-    width: 769px;
-    margin: auto;
-    display: flex;
-    flex-wrap: wrap;
+    /* display: flex; */
+    /* width: 769px; */
+
+    width: 80%;
+    max-width: 1440px;
+
+    display: grid; /* Usa il layout a griglia invece di flexbox */
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Colonne dinamiche basate sulla larghezza della card */
+    gap: 2rem;
     justify-content: center;
+
+    margin: auto;
+    flex-wrap: wrap;
+    /* justify-content: center; */
 
 }
 
 .card {
-    position: relative;
     display: flex;
     flex-direction: column;
-    width: 304px;
-    height: 404px;
+    width: 240px;
+    height: min-content;
+    margin: auto;
+
+    min-height: 100px;
+    max-height: 484px;
     color: hsl(169, 25%, 35%);
     background-color: rgb(255, 255, 255);
-    /* border: 2px solid hsl(8, 72%, 70%); */
     border-radius: 20px;
-    margin: 30px;
+    
     padding: 15px;
+    padding-top: 10px;
     box-shadow: 5px 25px 50px rgba(0, 0, 0, 0.5);
     position: relative;
     transition: all 0.4 ease;
@@ -99,11 +111,28 @@ header > h1 {
 }
 
 
+@media (max-width: 567px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.card:hover {
+    /* border: 1px solid hsl(8, 72%, 70%); */ /* colore da mettere su JS con onCardSelect */
+    border: 1px solid lightgrey;
+   
+}
+
+
 .title-card {
-    max-height: 60px;
     display: flex;
-    justify-content: center;
+    /* max-height: 60px; */
+    font-size: larger;    
+
+    align-items: baseline;
     outline: none;
+
+    
 }
 
 
@@ -114,23 +143,34 @@ header > h1 {
 }
 
 .delete-btn{
-    width: 25px;
-    height: 25px;
-    margin: 10px;
-    background-color: #3a9b9e;
-    font-weight: 500;
-    font-size: small;
+    width: 30px;
+    height: 18px;
     position: absolute;
-    margin-left: 85%;
+    top: 16px;
+    right: 16px;
+    
+    font-weight: 500;
+    font-size: xx-small;
     border-radius: 8px;
     text-align: center;
-    line-height: 1.6;
-    padding-top: 2px;
+    line-height: 2;
+    background-color: #3a9b9e;
     color: white;
 }
 
 .delete-btn:hover {
-    background-color: tomato;
+    
+    background-color: #DE4C36;
+    transition: 0.7s;
+    cursor: pointer;
+
+
+
+    /* border: 1px solid #3a9b9e;
+    background-color: #FBFBFB;
+    color: #3a9b9e;
+    font-weight: bold; */
+
 }
 
 
@@ -182,6 +222,39 @@ textarea, .added-link {
     padding: 17px;
 }
 
+
+
+
+
+.containerProva {
+    display: flex;
+    width: 847px;
+    margin: auto;    
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+
+
+}
+
+.provaItem {
+    
+    width: 240px;
+    min-height: 100px;
+    max-height: 484px;
+    height: min-content;
+    background-color: #DE4C36;
+    padding: 10px;
+
+    text-align: center;
+    overflow: hidden;
+    /* flex-basis: auto; */
+
+    overflow: hidden;
+    word-wrap: break-word;
+    
+
+}
 
 
 

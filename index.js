@@ -24,7 +24,7 @@ let isNoteEdited = false
 
 
 
-
+//RETRIEVING DEI VALORI SALVATI SU FIREBASE
 onValue(notesInDB, (snapshot) => {
 
     container.innerHTML = ''   //RIPULISCO IL CONTANIER PRIMA DI AGGIUNGERE LE NOTE
@@ -53,7 +53,6 @@ function updateUI() {
             return new Date(b[1].updated) - new Date(a[1].updated)
         })
     }
-
     
     container.innerHTML = ''   //RIPULISCO IL CONTAINER PRIMA DI AGGIUNGERE LE NOTE
     
@@ -114,7 +113,7 @@ function createCard(_title = 'Titolo', _content = '', uuid) {
     const deleteBtn = document.createElement('div')
     deleteBtn.id = 'delete-btn'
     deleteBtn.className = 'delete-btn'
-    deleteBtn.textContent = "X"
+    deleteBtn.textContent = "elimina"
     deleteBtn.setAttribute('data-uuid', uuid)
        
     newCard.appendChild(title)
@@ -134,11 +133,12 @@ function createCard(_title = 'Titolo', _content = '', uuid) {
 //  GESTIONE AGGIUNTA CARD AL DOM, CREATA AL CLICK DI ADD-BTN
 document.getElementById('add-btn').addEventListener('click', () => createFirstNote())
 
-function createFirstNote(){
+function createFirstNote() {
     let freshNote = createCard()
+
     requestAnimationFrame(() => {
         expandCard(freshNote)
-        freshNote.querySelector('.content-card').focus()
+        freshNote.querySelector('.content-card').focus()  
     })
 }
 
