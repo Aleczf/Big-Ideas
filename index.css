@@ -13,6 +13,9 @@ header {
     justify-content: center;
     flex-wrap: wrap;
     align-items: center;
+
+    /* padding-bottom: 25px;
+    margin-bottom: 25px; */
 }
 
 header > h1 {
@@ -26,26 +29,103 @@ header > h1 {
 }
 
 
-
 .add-btn {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 100%;
+    
+    position: fixed;
+    left: 50%;
+    top: 90%;
+    transform: translate(-50%, -50%);
+
     background-color: #3a9b9e;
     color: #FBFBFB;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     font-size: 2rem;
+    
     font-weight: bolder;
     display: flex;
     justify-content: center;
     align-items: center;
     user-select: none;
+
+    z-index: 1;
 }
+
+.add-btn::after {
+    width: 80px;
+    height: 60px;
+    border-radius: 100%;
+    background-color: transparent;
+    display: block;
+}
+
 
 .add-btn:hover {
     background-color: #DE4C36;
     transition: 0.7s;
     cursor: pointer;
 }
+
+.bottom-section {
+    position: fixed;
+    top: 90%;    
+    width: 100%;
+    height: 20%;    
+    background-color: #bdd2cee5;
+
+    /* 9fc6bfe5 */
+
+}
+
+
+
+
+
+
+
+.add-section {
+    border-bottom: 5px solid #FBFBFB;
+    padding-bottom: 30px;
+    position: relative;
+
+}
+
+.tool-section {
+    border-bottom: 5px solid #FBFBFB;
+    padding-bottom: 20px;
+    position: relative;
+
+}
+.other-buttons {
+    width: 50px;
+    height: 50px;
+    color: #DE4C36;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+  }
+  
+  .add-button:hover .other-buttons {
+    /* display: block; */
+    animation: open-menu 0.5s ease-in-out;
+  }
+  
+  @keyframes open-menu {
+    0% {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+    50% {
+      transform: translate(-50%, -50%) rotate(180deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+
 
 .svuota-tutto, .most-recent, .least-recent  {
     width: 50px;
@@ -72,20 +152,16 @@ header > h1 {
 
 
 .container {
-    /* display: flex; */
-    /* width: 769px; */
-
+    
     width: 80%;
     max-width: 1440px;
-
-    display: grid; /* Usa il layout a griglia invece di flexbox */
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Colonne dinamiche basate sulla larghezza della card */
-    gap: 2rem;
-    justify-content: center;
-
     margin: auto;
-    flex-wrap: wrap;
-    /* justify-content: center; */
+    padding-top: 100px;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Colonne dinamiche basate sulla larghezza della card */
+    gap: 2rem 1rem;  
+       
 
 }
 
@@ -111,9 +187,19 @@ header > h1 {
 }
 
 
-@media (max-width: 567px) {
+
+
+/* MEDIA QUERY PER MOBILE */
+@media (max-width: 634px) {
     .container {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        width: 404px;
+        column-gap: 5px;
+        row-gap: 10px;
+    }
+
+    .card {
+        width: 195px;
     }
 }
 
@@ -163,8 +249,6 @@ header > h1 {
     background-color: #DE4C36;
     transition: 0.7s;
     cursor: pointer;
-
-
 
     /* border: 1px solid #3a9b9e;
     background-color: #FBFBFB;
@@ -226,51 +310,27 @@ textarea, .added-link {
 
 
 
-.containerProva {
-    display: flex;
-    width: 847px;
-    margin: auto;    
-    gap: 1rem;
-    justify-content: center;
+
+.layout-toggle {
+    color: white;    
+    
+}
+
+.one-col-layout {
+    
+    padding-top: 100px;
+    width: 80%;
+    max-width: 1440px;  
+    display: grid; 
+    
+    /* grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));  */
+    gap: 2rem 1rem;
+    margin: auto;
     flex-wrap: wrap;
+    /* justify-content: center; */    
 
 
-}
-
-.provaItem {
+    grid-template-columns: 1fr;
     
-    width: 240px;
-    min-height: 100px;
-    max-height: 484px;
-    height: min-content;
-    background-color: #DE4C36;
-    padding: 10px;
-
-    text-align: center;
-    overflow: hidden;
-    /* flex-basis: auto; */
-
-    overflow: hidden;
-    word-wrap: break-word;
-    
-
 }
-
-
-
-
-
-
-
-
-
-
-
-/* #de4c36;  arancio */
-
-
-/* <div contenteditable="true" aria-multiline="true" role="textbox" class="notranslate IZ65Hb-YPqjbf fmcmS-x3Eknd h1U9Be-YPqjbf" dir="ltr" tabindex="0" spellcheck="true">Acqua<br>Taralli<br>Barrette<br>dsadsa</div> */
-
-
-
 

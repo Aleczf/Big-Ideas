@@ -22,6 +22,8 @@ const DESCENDING_ORDER = '1'
 let currentCardOrder
 let isNoteEdited = false
 
+let isLayoutOneCol = false
+
 
 
 //RETRIEVING DEI VALORI SALVATI SU FIREBASE
@@ -313,4 +315,54 @@ function deleteNote(){
         })    
     })
 }
+
+
+// document.getElementById('layout-toggle').addEventListener('click', () => {
+    
+//     if(container.classList.contains('container')) {
+//         container.classList.remove('container') 
+//         container.classList.add('one-col-layout') 
+//     } else {
+//         container.classList.remove('one-col-layout') 
+//         container.classList.add('container') 
+//     }
+    
+// })
+
+
+
+
+
+// PULSANTE PER SWITCHARE LAYOUT A UNA COLONNA SOLA
+
+document.getElementById('layout-toggle').addEventListener('click', () => {
+
+    // isLayoutOneCol = true
+
+    // if(isLayoutOneCol) {
+    //     const cards = document.querySelectorAll('.card')    
+        
+    //     container.style.width = "400px"
+    //     container.style.gridTemplateColumns = "1fr"
+
+    //     cards.forEach(card => {
+    //         card.style.width = "390px";
+    //     });
+    // }
+
+
+        const cards = document.querySelectorAll('.card')    
+        
+        container.style.width = "400px"
+        container.style.gridTemplateColumns = "1fr"
+
+        cards.forEach(card => {
+            card.style.width = "390px";
+        });
+    
+
+})
+
+//rivedere/sistemare lo switch di ritorno
+
 
