@@ -84,13 +84,15 @@ header > h1 {
 
 
 
-
+/* 
 .add-section {
     border-bottom: 5px solid #FBFBFB;
     padding-bottom: 30px;
     position: relative;
 
-}
+} */
+
+
 
 .tool-section {
     border-bottom: 5px solid #FBFBFB;
@@ -275,6 +277,7 @@ header > h1 {
     overflow: visible;
     z-index: 1000;
     position: fixed;
+    margin: auto
 }
 
 
@@ -332,7 +335,7 @@ textarea, .added-link {
 .one-col-card {
     display: flex;
     flex-direction: column;
-    width: 195px;
+    width: 395px;
     height: min-content;
     margin: auto;
 
@@ -349,3 +352,53 @@ textarea, .added-link {
     transition: all 0.4 ease;
     overflow: hidden;
 }
+
+
+/* CAMBIARE NOMI CLASSI HAMBURGER, CAMBIARE SELETTORI TROPPO GENERICI CON LE RISPETTIVE CLASSI  */
+
+/* HAMBURGER BUTTON */
+button {
+    background:  #3a9b9e;
+    border: none;
+    border-radius: 100%;
+  }
+  
+  /* button one */
+  
+  .button-one {
+    --button-color: white;
+  }
+  
+  .button-one .line {
+    transition: y 300ms ease-in 300ms, rotate 300ms ease-in, opacity 0ms 300ms;
+    transform-origin: center;
+  }
+  
+  .button-one[aria-expanded="true"] .line {
+    transition: y 300ms ease-in, rotate 300ms ease-in 300ms, opacity 0ms 300ms;
+  }
+  
+  .button-one[aria-expanded="true"] :is(.top, .bottom) {
+    y: 45;
+  }
+  
+  .button-one[aria-expanded="true"] .top {
+    rotate: 45deg;
+  }
+  
+  .button-one[aria-expanded="true"] .middle {
+    opacity: 0;
+  }
+  
+  .button-one[aria-expanded="true"] .bottom {
+    rotate: -45deg;
+  }
+
+
+  .base64 {
+    width: 30px;
+    height: 30px;
+    
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InJlZCIvPjwvc3ZnPg==")
+  }
+
