@@ -317,17 +317,29 @@ function deleteNote(){
 }
 
 
-// document.getElementById('layout-toggle').addEventListener('click', () => {
+document.getElementById('layout-toggle').addEventListener('click', () => {
+
+    const cards = document.querySelectorAll('.card')   
     
-//     if(container.classList.contains('container')) {
-//         container.classList.remove('container') 
-//         container.classList.add('one-col-layout') 
-//     } else {
-//         container.classList.remove('one-col-layout') 
-//         container.classList.add('container') 
-//     }
-    
-// })
+    if(container.classList.contains('container')) {
+        container.classList.remove('container') 
+        container.classList.add('one-col-layout') 
+        
+        cards.forEach(card => {
+            card.classList.add('one-col-card')
+        })
+
+
+    } else {
+        container.classList.remove('one-col-layout') 
+
+        cards.forEach(card => {
+            card.classList.remove('one-col-card')
+        })
+
+        container.classList.add('container')         
+    }    
+})
 
 
 
@@ -335,33 +347,22 @@ function deleteNote(){
 
 // PULSANTE PER SWITCHARE LAYOUT A UNA COLONNA SOLA
 
-document.getElementById('layout-toggle').addEventListener('click', () => {
+// document.getElementById('layout-toggle').addEventListener('click', () => {
 
-    // isLayoutOneCol = true
+//     isLayoutOneCol = true
 
-    // if(isLayoutOneCol) {
-    //     const cards = document.querySelectorAll('.card')    
+//     if(isLayoutOneCol) {
+//         const cards = document.querySelectorAll('.card')    
         
-    //     container.style.width = "400px"
-    //     container.style.gridTemplateColumns = "1fr"
+//         container.style.width = "400px"
+//         container.style.gridTemplateColumns = "1fr"
 
-    //     cards.forEach(card => {
-    //         card.style.width = "390px";
-    //     });
-    // }
+//         cards.forEach(card => {
+//             card.style.width = "390px";
+//         });
+//     }
 
-
-        const cards = document.querySelectorAll('.card')    
-        
-        container.style.width = "400px"
-        container.style.gridTemplateColumns = "1fr"
-
-        cards.forEach(card => {
-            card.style.width = "390px";
-        });
-    
-
-})
+// })
 
 //rivedere/sistemare lo switch di ritorno
 
