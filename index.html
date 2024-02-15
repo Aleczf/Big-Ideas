@@ -9,6 +9,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" /> -->
+
 </head>
 <body>
 
@@ -18,29 +27,42 @@
 
     <header id="header">
 
-        <div class="layout-toggle" id="layout-toggle">hamb</div>
+        <!-- <span class="material-symbols-outlined">
+            menu
+        </span> -->
+
+        <div class="layout-toggle" id="layout-toggle">
+            <span class="material-symbols-outlined">
+                grid_view
+            </span>
+        </div>
+
+        <div class="layout-toggle" id="layout-toggle">
+            <span class="material-symbols-outlined">
+                splitscreen
+            </span>
+        </div>
 
         <h1>BIG IDEAS</h1>
+
+        <!-- <div class="dark-light-toggle" id="dark-light-toggle">
+            <span class="material-symbols-outlined">
+                dark_mode
+            </span>
+        </div>
+
+        <div class="dark-light-toggle" id="dark-light-toggle">
+            <span class="material-symbols-outlined">
+                light_mode
+            </span>
+        </div> -->
+
         
         <div id="svuota-tutto" class="svuota-tutto">cancella tutto</div>
         <div id="most-recent" class="most-recent">più recenti</div>
         <div id="least-recent" class="least-recent">meno recenti</div>
     </header>
 
-        <!-- Hamburger Button -->
-    <button class="button-one" aria-controls="primary-navigation" aria-expanded="false">
-        <svg fill="var(--button-color)" class="hamburger" viewBox="0 0 100 100" width="40">
-        <rect class="line top" width="80" height="10" x="10" y="25" rx="5">
-        </rect>
-        <rect class="line middle" width="80" height="10" x="10" y="45" rx="5">
-        </rect>
-        <rect class="line bottom" width="80" height="10" x="10" y="65" rx="5">
-        </rect>
-        </svg>
-    </button>
-
-    
-    <!-- CAMBIARE NOMI CLASSI HAMBURGER -->
 
 
     <div id="container" class="container"></div>
@@ -60,6 +82,7 @@
 
 
     <script src="index.js" type="module"></script>
+    
 </body>
 </html>
 

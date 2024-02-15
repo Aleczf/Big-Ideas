@@ -319,11 +319,14 @@ function deleteNote(){
 }
 
 
+
+
 document.getElementById('layout-toggle').addEventListener('click', () => {
 
     const cards = document.querySelectorAll('.card')   
     
     if(container.classList.contains('container')) {
+        // this.textContent = 'splitscreen'         
         container.classList.remove('container') 
         container.classList.add('one-col-layout') 
         
@@ -333,7 +336,9 @@ document.getElementById('layout-toggle').addEventListener('click', () => {
 
 
     } else {
+        // this.textContent = 'grid_view'       CAMBIARE L'ICONA IN BASE A LAYOUT
         container.classList.remove('one-col-layout') 
+        
 
         cards.forEach(card => {
             card.classList.remove('one-col-card')
@@ -367,24 +372,5 @@ document.getElementById('layout-toggle').addEventListener('click', () => {
 // })
 
 //rivedere/sistemare lo switch di ritorno
-
-
-
-// HAMBURGER BUTTON
-const buttons = document.querySelectorAll("button");
-
-buttons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const currentState = button.getAttribute("data-state");
-
-    if (!currentState || currentState === "closed") {
-      button.setAttribute("data-state", "opened");
-      button.setAttribute("aria-expanded", "true");
-    } else {
-      button.setAttribute("data-state", "closed");
-      button.setAttribute("aria-expanded", "false");
-    }
-  });
-});
 
 
