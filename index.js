@@ -373,4 +373,6 @@ document.getElementById('layout-toggle').addEventListener('click', () => {
 
 //rivedere/sistemare lo switch di ritorno
 
+// rivedere tutto.
+
 
