@@ -260,6 +260,7 @@ function saveNote(selectedCard) {
 }
 
 
+
 function saveOnFocusOut(myCard, _uuid) {
 
     myCard.addEventListener('focusout', (event) => {
